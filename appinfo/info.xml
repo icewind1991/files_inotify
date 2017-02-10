@@ -2,7 +2,12 @@
 <info>
 	<id>files_inotify</id>
 	<name>INotify file watcher</name>
-	<description>Adds support detecting changes in local external storages with occ files_external:notify</description>
+	<description><![CDATA[Adds support detecting changes in local external storages with
+occ files_external:notify.
+
+Note that there are scalability limitations to using `inotify` on large folder structures, see the [README](https://github.com/icewind1991/files_inotify/blob/master/README.md) for more information
+]]>
+	</description>
 	<licence>AGPL</licence>
 	<author>Robin Appelman</author>
 	<namespace>Files_INotify</namespace>
@@ -15,4 +20,11 @@
 		<lib>inotify</lib>
 		<nextcloud min-version="11.0" max-version="12"/>
 	</dependencies>
+
+	<category>files</category>
+	<website>https://github.com/icewind1991/files_inotify</website>
+	<bugs>https://github.com/icewind1991/files_inotify/issues</bugs>
+	<repository type="git">
+		https://github.com/icewind1991/files_inotify.git
+	</repository>
 </info>
