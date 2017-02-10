@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<info>
+	<id>files_inotify</id>
+	<name>INotify file watcher</name>
+	<description>Adds support detecting changes in local external storages with occ files_external:notify</description>
+	<licence>AGPL</licence>
+	<author>Robin Appelman</author>
+	<namespace>Files_INotify</namespace>
+	<version>0.1.0</version>
+	<types>
+		<filesystem/>
+	</types>
+
+	<dependencies>
+		<lib>inotify</lib>
+		<nextcloud min-version="11.0" max-version="12"/>
+	</dependencies>
+</info>
