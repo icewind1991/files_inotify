@@ -4,6 +4,10 @@ Adds support detecting changes in local external storages with occ files_externa
 
 ## Usage
 
+To detect changes you need to run the `files_external:notify` command for the configured local external storage.
+
+Note that this command runs continuously and should be started in the background by an init system or other task manager for best usage. 
+
 Find the id of the external storage that should be checked
 
 ```
