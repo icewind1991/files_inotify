@@ -2,6 +2,7 @@
 <info>
 	<id>files_inotify</id>
 	<name>INotify file watcher</name>
+	<summary>Adds support detecting changes in local external storages</summary>
 	<description><![CDATA[Adds support detecting changes in local external storages with
 occ files_external:notify.
 
