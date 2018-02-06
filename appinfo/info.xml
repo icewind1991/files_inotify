@@ -19,7 +19,7 @@ Note that there are scalability limitations to using `inotify` on large folder s
 
 	<dependencies>
 		<lib>inotify</lib>
-		<nextcloud min-version="11.0" max-version="12"/>
+		<nextcloud min-version="11.0" max-version="14"/>
 	</dependencies>
 
 	<category>files</category>
