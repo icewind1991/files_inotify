@@ -2,6 +2,11 @@
 
 Adds support detecting changes in local external storages with occ files_external:notify
 
+## Requirements
+
+This app uses the php inotify extensions which is required to be installed before this app can be enabled.
+The php inotify extension can be installed from your distribution's package or [pecl](https://pecl.php.net/package/inotify).
+
 ## Usage
 
 To detect changes you need to run the `files_external:notify` command for the configured local external storage.
