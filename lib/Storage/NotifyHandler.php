@@ -170,14 +170,14 @@ class NotifyHandler implements INotifyHandler {
 
 		stream_set_blocking($this->fd, true);
 		if (function_exists('pcntl_signal')) {
-			pcntl_signal(SIGTERM, array($this, 'stop'));
-			pcntl_signal(SIGINT, array($this, 'stop'));
+			pcntl_signal(SIGTERM, [$this, 'stop']);
+			pcntl_signal(SIGINT, [$this, 'stop']);
 		}
 		$active = true;
 		$read = [$this->fd];
 		$write = null;
 		$except = null;
-		while ($active && is_resource($this->fd)) {
+		while ($active && is_resource($this->fd) && !empty($read)) {
 			$changed = stream_select($read, $write, $except, 60);
 			if (function_exists('pcntl_signal_dispatch')) {
 				pcntl_signal_dispatch();
