@@ -174,20 +174,26 @@ class NotifyHandler implements INotifyHandler {
 			pcntl_signal(SIGINT, [$this, 'stop']);
 		}
 		$active = true;
-		$read = [$this->fd];
-		$write = null;
-		$except = null;
-		while ($active && is_resource($this->fd) && !empty($read)) {
-			$changed = stream_select($read, $write, $except, 60);
-			if (function_exists('pcntl_signal_dispatch')) {
+		// loop while $this->fd is valid
+		while ($active && is_resource($this->fd)) {
+			$read = [$this->fd];
+			$write = null;
+			$except = null;
+			// suppress errors and warnings (use return value instead)
+			$changed = @stream_select($read, $write, $except, 60);
+			// php docs say: On error FALSE is returned and a warning raised
+			// php docs say: (this can happen if the system call is interrupted by an incoming signal). 
+			// handle those signals if possible
+			if ($changed===false && function_exists('pcntl_signal_dispatch')) {
 				pcntl_signal_dispatch();
 			}
-
+			
+			// we only added one stream, so $changed > 0 means it is readable now
 			if ($changed) {
 				$events = $this->readEvents();
 				foreach ($events as $event) {
 					if ($callback($event) === false) {
-						$active = false;
+						$active = false;	// stop this loop
 					}
 				}
 			}
