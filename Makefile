@@ -1,13 +1,14 @@
 app_name=files_inotify
 project_dir=$(CURDIR)/../$(app_name)
 build_dir=$(CURDIR)/build/artifacts
+vendor_dir=$(CURDIR)/vendor
 sign_dir=$(build_dir)/sign
 cert_dir=$(HOME)/.nextcloud/certificates
 
 all: appstore
 
 clean:
-	rm -rf $(build_dir)
+	rm -rf $(build_dir) $(vendor_dir)
 
 appstore: clean
 	mkdir -p $(sign_dir)
