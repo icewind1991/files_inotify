@@ -49,7 +49,9 @@ class NotifyHandler implements INotifyHandler {
 
 	private function getDirectoryIterator($path) {
 		return new \RecursiveIteratorIterator(
-			new \RecursiveDirectoryIterator($path, \FilesystemIterator::CURRENT_AS_PATHNAME + \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::SELF_FIRST);
+			new \RecursiveDirectoryIterator($path,
+				\FilesystemIterator::CURRENT_AS_PATHNAME + \FilesystemIterator::SKIP_DOTS),
+			\RecursiveIteratorIterator::SELF_FIRST);
 	}
 
 	private function register() {
@@ -64,23 +66,46 @@ class NotifyHandler implements INotifyHandler {
 	}
 
 	private function watchPath($path) {
-		$descriptor = inotify_add_watch($this->fd, $path, \IN_MODIFY + \IN_CREATE + \IN_MOVED_FROM + \IN_MOVED_TO + \IN_DELETE);
+		$descriptor = inotify_add_watch($this->fd, $path,
+			\IN_MODIFY + \IN_CREATE + \IN_MOVED_FROM + \IN_MOVED_TO + \IN_DELETE);
 		$this->pathMap[$descriptor] = $path;
-	}
-
-	public function getChanges() {
-
-		stream_set_blocking($this->fd, false);
-		return $this->readEvents();
 	}
 
 	/**
 	 * @return IChange[]
 	 */
-	private function readEvents() {
+	public function getChanges(): array {
+
+		stream_set_blocking($this->fd, false);
+		return $this->deduplicateEvents($this->readEvents());
+	}
+
+	/**
+	 * @return IChange[]
+	 */
+	private function readEvents(): array {
 		$events = inotify_read($this->fd);
 		$parsedEvents = array_map([$this, 'parseEvent'], $events);
-		return call_user_func_array('array_merge', $parsedEvents);
+		return $this->deduplicateEvents(call_user_func_array('array_merge', $parsedEvents));
+	}
+
+	/**
+	 * @param IChange[] $events
+	 * @return IChange[]
+	 */
+	private function deduplicateEvents(array $events): array {
+		/** @var null|IChange $lastEvent */
+		$lastEvent = null;
+		$filteredEvents = [];
+
+		foreach ($events as $event) {
+			if ($lastEvent === null || ($event->getPath() !== $lastEvent->getPath() && $event->getType() == $event->getType())) {
+				$filteredEvents[] = $event;
+			}
+			$lastEvent = $event;
+		}
+
+		return $filteredEvents;
 	}
 
 	/**
@@ -105,7 +130,10 @@ class NotifyHandler implements INotifyHandler {
 			if (isset($this->moveMap[$cookie]['to'])) {
 				$targetPath = $this->moveMap[$event['cookie']]['to'];
 				unset($this->moveMap[$cookie]);
-				return [new RenameChange(IChange::RENAMED, $this->getRelativePath($path), $this->getRelativePath($targetPath))];
+				return [
+					new RenameChange(IChange::RENAMED, $this->getRelativePath($path),
+						$this->getRelativePath($targetPath)),
+				];
 			} else {
 				$this->moveMap[$event['cookie']]['from'] = $path;
 				return [];
@@ -116,7 +144,10 @@ class NotifyHandler implements INotifyHandler {
 			if (isset($this->moveMap[$cookie]['from'])) {
 				$fromPath = $this->moveMap[$event['cookie']]['from'];
 				unset($this->moveMap[$cookie]);
-				return [new RenameChange(IChange::RENAMED, $this->getRelativePath($fromPath), $this->getRelativePath($path))];
+				return [
+					new RenameChange(IChange::RENAMED, $this->getRelativePath($fromPath),
+						$this->getRelativePath($path)),
+				];
 			} else {
 				$this->moveMap[$event['cookie']]['to'] = $path;
 				return [];
@@ -184,16 +215,16 @@ class NotifyHandler implements INotifyHandler {
 			// php docs say: On error FALSE is returned and a warning raised
 			// php docs say: (this can happen if the system call is interrupted by an incoming signal). 
 			// handle those signals if possible
-			if ($changed===false && function_exists('pcntl_signal_dispatch')) {
+			if ($changed === false && function_exists('pcntl_signal_dispatch')) {
 				pcntl_signal_dispatch();
 			}
-			
+
 			// we only added one stream, so $changed > 0 means it is readable now
 			if ($changed) {
 				$events = $this->readEvents();
 				foreach ($events as $event) {
 					if ($callback($event) === false) {
-						$active = false;	// stop this loop
+						$active = false;    // stop this loop
 					}
 				}
 			}
