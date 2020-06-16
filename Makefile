@@ -25,6 +25,7 @@ appstore: clean CHANGELOG.md
 	--exclude=Makefile \
 	--exclude=screenshots \
 	--exclude=phpunit*xml \
+	--exclude=node_modules \
 	$(project_dir) $(sign_dir)
 	tar -czf $(build_dir)/$(app_name).tar.gz \
 		-C $(sign_dir) $(app_name)
