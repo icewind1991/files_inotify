@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.1.9
+- Compatible with Nextcloud 20 and 21
+
 ## v0.1.8
 - Compatible with Nextcloud 19
 
