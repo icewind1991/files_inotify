@@ -75,7 +75,6 @@ class NotifyHandler implements INotifyHandler {
 	 * @return IChange[]
 	 */
 	public function getChanges(): array {
-
 		stream_set_blocking($this->fd, false);
 		return $this->deduplicateEvents($this->readEvents());
 	}
@@ -198,7 +197,6 @@ class NotifyHandler implements INotifyHandler {
 	}
 
 	public function listen(callable $callback) {
-
 		stream_set_blocking($this->fd, true);
 		if (function_exists('pcntl_signal')) {
 			pcntl_signal(SIGTERM, [$this, 'stop']);
@@ -213,7 +211,7 @@ class NotifyHandler implements INotifyHandler {
 			// suppress errors and warnings (use return value instead)
 			$changed = @stream_select($read, $write, $except, 60);
 			// php docs say: On error FALSE is returned and a warning raised
-			// php docs say: (this can happen if the system call is interrupted by an incoming signal). 
+			// php docs say: (this can happen if the system call is interrupted by an incoming signal).
 			// handle those signals if possible
 			if ($changed === false && function_exists('pcntl_signal_dispatch')) {
 				pcntl_signal_dispatch();

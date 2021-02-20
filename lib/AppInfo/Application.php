@@ -27,7 +27,7 @@ use OCA\Files_INotify\Storage\INotifyBackend;
 use \OCP\AppFramework\App;
 
 class Application extends App implements IBackendProvider {
-	public function __construct(array $urlParams = array()) {
+	public function __construct(array $urlParams = []) {
 		parent::__construct('files_inotify', $urlParams);
 	}
 
