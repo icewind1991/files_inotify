@@ -1,6 +1,6 @@
 # files_inotify
 
-[![Build Status](https://travis-ci.com/icewind1991/files_inotify.svg?branch=master)](https://travis-ci.com/icewind1991/files_inotify)
+[![PHPUnit](https://github.com/icewind1991/files_inotify/actions/workflows/phpunit.yml/badge.svg)](https://github.com/icewind1991/files_inotify/actions)
 
 Adds support detecting changes in local external storages with occ files_external:notify
 
