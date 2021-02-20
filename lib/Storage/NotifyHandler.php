@@ -27,14 +27,16 @@ use OCP\Files\Notify\IChange;
 use OCP\Files\Notify\INotifyHandler;
 
 class NotifyHandler implements INotifyHandler {
-	/** @var resource */
+	/** @var resource|null */
 	private $fd;
 
 	/** @var string */
 	private $basePath;
 
+	/** @var string[] */
 	private $pathMap = [];
 
+	/** @var string[][] */
 	private $moveMap = [];
 
 	/**
@@ -47,14 +49,14 @@ class NotifyHandler implements INotifyHandler {
 		$this->register();
 	}
 
-	private function getDirectoryIterator($path) {
+	private function getDirectoryIterator(string $path): \Iterator {
 		return new \RecursiveIteratorIterator(
 			new \RecursiveDirectoryIterator($path,
 				\FilesystemIterator::CURRENT_AS_PATHNAME + \FilesystemIterator::SKIP_DOTS),
 			\RecursiveIteratorIterator::SELF_FIRST);
 	}
 
-	private function register() {
+	private function register(): void {
 		$iterator = $this->getDirectoryIterator($this->basePath);
 
 		$this->watchPath($this->basePath);
@@ -65,7 +67,10 @@ class NotifyHandler implements INotifyHandler {
 		}
 	}
 
-	private function watchPath($path) {
+	private function watchPath(string $path): void {
+		if ($this->fd === null) {
+			return;
+		}
 		$descriptor = inotify_add_watch($this->fd, $path,
 			\IN_MODIFY + \IN_CREATE + \IN_MOVED_FROM + \IN_MOVED_TO + \IN_DELETE);
 		$this->pathMap[$descriptor] = $path;
@@ -75,6 +80,9 @@ class NotifyHandler implements INotifyHandler {
 	 * @return IChange[]
 	 */
 	public function getChanges(): array {
+		if ($this->fd === null) {
+			return [];
+		}
 		stream_set_blocking($this->fd, false);
 		return $this->deduplicateEvents($this->readEvents());
 	}
@@ -83,6 +91,9 @@ class NotifyHandler implements INotifyHandler {
 	 * @return IChange[]
 	 */
 	private function readEvents(): array {
+		if ($this->fd === null) {
+			return [];
+		}
 		$events = inotify_read($this->fd);
 		$parsedEvents = array_map([$this, 'parseEvent'], $events);
 		return $this->deduplicateEvents(call_user_func_array('array_merge', $parsedEvents));
@@ -112,7 +123,7 @@ class NotifyHandler implements INotifyHandler {
 	 * @return IChange[]
 	 * @throws \Exception
 	 */
-	private function parseEvent(array $event) {
+	private function parseEvent(array $event): array {
 		if (!isset($this->pathMap[$event['wd']])) {
 			throw new \Exception('Invalid inotify event');
 		}
@@ -180,7 +191,7 @@ class NotifyHandler implements INotifyHandler {
 	 * @param $path
 	 * @return IChange[]
 	 */
-	private function createChildEvents($path) {
+	private function createChildEvents(string $path): array {
 		$changes = [];
 		foreach ($this->getDirectoryIterator($path) as $file) {
 			$changes[] = new Change(IChange::ADDED, $this->getRelativePath($file));
@@ -192,11 +203,14 @@ class NotifyHandler implements INotifyHandler {
 	 * @param $path
 	 * @return string
 	 */
-	private function getRelativePath($path) {
+	private function getRelativePath(string $path): string {
 		return substr($path, strlen($this->basePath) + 1);
 	}
 
-	public function listen(callable $callback) {
+	public function listen(callable $callback): void {
+		if ($this->fd === null) {
+			return;
+		}
 		stream_set_blocking($this->fd, true);
 		if (function_exists('pcntl_signal')) {
 			pcntl_signal(SIGTERM, [$this, 'stop']);
@@ -229,7 +243,12 @@ class NotifyHandler implements INotifyHandler {
 		}
 	}
 
-	public function stop() {
-		fclose($this->fd);
+	public function stop(): void {
+		if ($this->fd === null) {
+			return;
+		}
+		$handle = $this->fd;
+		$this->fd = null;
+		fclose($handle);
 	}
 }
