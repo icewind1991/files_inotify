@@ -1,14 +1,8 @@
 name: PHPUnit
-
-on:
-  pull_request:
-  push:
-    branches:
-      - main
-      - stable*
+on: [push, pull_request]
 
 env:
-  APP_NAME: permissions_overwrite
+  APP_NAME: files_inotify
 
 jobs:
   php:
@@ -47,7 +41,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-versions }}
           tools: phpunit
-          extensions: mbstring, iconv, fileinfo, intl, sqlite, pdo_sqlite, zip, gd
+          extensions: mbstring, iconv, fileinfo, intl, sqlite, pdo_sqlite, zip, gd, inotify
 
       - name: Set up PHPUnit
         working-directory: apps/${{ env.APP_NAME }}
@@ -59,6 +53,7 @@ jobs:
         run: |
           mkdir data
           ./occ maintenance:install --verbose --database=${{ matrix.databases }} --database-name=nextcloud --database-host=127.0.0.1 --database-port=$DB_PORT --database-user=root --database-pass=rootpassword --admin-user admin --admin-pass password
+          ./occ app:enable --force files_external
           ./occ app:enable --force ${{ env.APP_NAME }}
           php -S localhost:8080 &
       - name: PHPUnit
@@ -110,7 +105,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-versions }}
           tools: phpunit
-          extensions: mbstring, iconv, fileinfo, intl, mysql, pdo_mysql, zip, gd
+          extensions: mbstring, iconv, fileinfo, intl, mysql, pdo_mysql, zip, gd, inotify
           coverage: none
 
       - name: Set up PHPUnit
@@ -123,6 +118,7 @@ jobs:
         run: |
           mkdir data
           ./occ maintenance:install --verbose --database=${{ matrix.databases }} --database-name=nextcloud --database-host=127.0.0.1 --database-port=$DB_PORT --database-user=root --database-pass=rootpassword --admin-user admin --admin-pass password
+          ./occ app:enable --force files_external
           ./occ app:enable --force ${{ env.APP_NAME }}
           php -S localhost:8080 &
       - name: PHPUnit
@@ -176,7 +172,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-versions }}
           tools: phpunit
-          extensions: mbstring, iconv, fileinfo, intl, pgsql, pdo_pgsql, zip, gd
+          extensions: mbstring, iconv, fileinfo, intl, pgsql, pdo_pgsql, zip, gd, inotify
           coverage: none
 
       - name: Set up PHPUnit
@@ -189,6 +185,7 @@ jobs:
         run: |
           mkdir data
           ./occ maintenance:install --verbose --database=${{ matrix.databases }} --database-name=nextcloud --database-host=127.0.0.1 --database-port=$DB_PORT --database-user=root --database-pass=rootpassword --admin-user admin --admin-pass password
+          ./occ app:enable --force files_external
           ./occ app:enable --force ${{ env.APP_NAME }}
           php -S localhost:8080 &
       - name: PHPUnit

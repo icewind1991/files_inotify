@@ -2,8 +2,9 @@
 	"require-dev": {
 		"christophwurst/nextcloud": "dev-master",
 		"php-parallel-lint/php-parallel-lint": "^1.0",
-		"phpunit/phpunit": "^9",
+		"phpunit/phpunit": "^8",
 		"psalm/phar": "^4.3",
+		"nextcloud/coding-standard": "^0.4.0",
 		"ext-inotify": "*"
 	},
 	"scripts": {
