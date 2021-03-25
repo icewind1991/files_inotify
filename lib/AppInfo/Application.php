@@ -21,33 +21,40 @@
 
 namespace OCA\Files_INotify\AppInfo;
 
-use OCA\Files_External\Lib\Config\IBackendProvider;
 use OCA\Files_External\Service\BackendService;
-use OCA\Files_INotify\Storage\INotifyBackend;
+use OCA\Files_INotify\INotifyBackendProvider;
 use \OCP\AppFramework\App;
+use OCP\AppFramework\Bootstrap\IBootContext;
+use OCP\AppFramework\Bootstrap\IBootstrap;
+use OCP\AppFramework\Bootstrap\IRegistrationContext;
+use OCP\AppFramework\IAppContainer;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class Application extends App implements IBackendProvider {
+class Application extends App implements IBootstrap {
 	public function __construct(array $urlParams = []) {
 		parent::__construct('files_inotify', $urlParams);
 	}
 
-	public function register() {
-		if (\OC::$CLI) {
-			/** @var \OC\Server $server */
-			$server = $this->getContainer()->getServer();
-
-			/** @var BackendService $backendService */
-			$backendService = $server->query(BackendService::class);
-
-			$backendService->registerBackendProvider($this);
-		}
+	public function register(IRegistrationContext $context): void {
 	}
 
-	public function getBackends() {
-		$container = $this->getContainer();
+	public function boot(IBootContext $context): void {
+		$context->injectFn([$this, 'registerBackendDependents']);
+	}
 
-		return [
-			$container->query(INotifyBackend::class)
-		];
+	public function registerBackendDependents(IAppContainer $appContainer, EventDispatcherInterface $dispatcher) {
+		$dispatcher->addListener(
+			'OCA\\Files_External::loadAdditionalBackends',
+			function () use ($appContainer) {
+				if (\OC::$CLI && class_exists(BackendService::class)) {
+					// we can't inject these 2, since they would cause hard errors if files_external is not enabled
+					/** @var BackendService $backendService */
+					$backendService = $appContainer->get(BackendService::class);
+					/** @var INotifyBackendProvider $backendProvider */
+					$backendProvider = $appContainer->get(INotifyBackendProvider::class);
+					$backendService->registerBackendProvider($backendProvider);
+				}
+			}
+		);
 	}
 }
