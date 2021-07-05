@@ -58,3 +58,54 @@ namespace OC\Files\Notify {
 		}
 	}
 }
+
+namespace OCA\Files_External\Lib\Backend {
+	class Backend {
+		/**
+		 * @param string $class
+		 * @return $this
+		 */
+		public function setStorageClass($class) {
+
+		}
+	}
+
+	class Local extends Backend {
+
+		public function __construct($l10n, $auth) {
+		}
+	}
+}
+
+namespace OCA\Files_External\Lib\Auth {
+	class NullMechanism {
+	}
+}
+
+namespace OCA\Files_External\Lib\Config {
+	use OCA\Files_External\Lib\Backend\Backend;
+
+	interface IBackendProvider {
+		/**
+		 * @return Backend[]
+		 */
+		public function getBackends();
+	}
+}
+
+namespace OCA\Files_External\Service {
+
+	use OCA\Files_External\Lib\Config\IBackendProvider;
+
+	class BackendService {
+		public function registerBackendProvider(IBackendProvider $provider) {
+
+		}
+	}
+}
+
+namespace OC\Files\Storage {
+	class Local {
+		public $datadir;
+	}
+}
