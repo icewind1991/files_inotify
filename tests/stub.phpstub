@@ -21,6 +21,12 @@ declare(strict_types=1);
  *
  */
 
+namespace {
+	class OC {
+		static $CLI = false;
+	}
+}
+
 namespace OC\Files\Notify {
 
 	use OCP\Files\Notify\IChange;
