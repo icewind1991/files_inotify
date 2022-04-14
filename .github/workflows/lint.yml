@@ -32,7 +32,7 @@ jobs:
         uses: shivammathur/setup-php@master
         with:
           php-version: 7.4
-          tools: composer:v1
+          tools: composer
           coverage: none
           extensions: inotify
       - name: Install dependencies

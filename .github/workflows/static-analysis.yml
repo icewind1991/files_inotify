@@ -6,7 +6,7 @@ jobs:
       runs-on: ubuntu-latest
       strategy:
           matrix:
-              ocp-version: [ '21', 'dev-master' ]
+              ocp-version: [ 'v22.0.0-RC1', 'dev-master' ]
       name: Nextcloud ${{ matrix.ocp-version }}
       steps:
           - name: Checkout
@@ -15,12 +15,14 @@ jobs:
             uses: shivammathur/setup-php@master
             with:
                 php-version: 7.4
-                tools: composer:v1
+                tools: composer
                 coverage: none
                 extensions: inotify
           - name: Install dependencies
             run: composer i
           - name: Install dependencies
-            run: composer require --dev christophwurst/nextcloud:${{ matrix.ocp-version }}
+            run: |
+              rm composer.lock
+              composer require --dev christophwurst/nextcloud:${{ matrix.ocp-version }}
           - name: Run coding standards check
             run: composer run psalm

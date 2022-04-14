@@ -5,7 +5,8 @@
 		"phpunit/phpunit": "^8",
 		"psalm/phar": "^4.3",
 		"nextcloud/coding-standard": "^0.4.0",
-		"ext-inotify": "*"
+		"ext-inotify": "*",
+		"symfony/event-dispatcher": "4.4.30"
 	},
 	"scripts": {
 		"lint": "parallel-lint --exclude src --exclude vendor --exclude target --exclude build .",
