@@ -12,14 +12,14 @@ Note that there are scalability limitations to using `inotify` on large folder s
 	<licence>AGPL</licence>
 	<author>Robin Appelman</author>
 	<namespace>Files_INotify</namespace>
-	<version>0.1.12</version>
+	<version>0.1.13</version>
 	<types>
 		<filesystem/>
 	</types>
 
 	<dependencies>
 		<lib>inotify</lib>
-		<nextcloud min-version="22" max-version="24"/>
+		<nextcloud min-version="23" max-version="25"/>
 	</dependencies>
 
 	<category>files</category>
