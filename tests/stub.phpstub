@@ -44,7 +44,7 @@ namespace OC\Files\Notify {
 
 	}
 
-	class RenameChange implements IRenameChange {
+	class RenameChange implements IRenameChange, IChange {
 		public function __construct(int $type, string $source, string $target) {
 		}
 
