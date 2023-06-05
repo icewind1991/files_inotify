@@ -21,9 +21,9 @@
 
 namespace OCA\Files_INotify\AppInfo;
 
+use \OCP\AppFramework\App;
 use OCA\Files_External\Service\BackendService;
 use OCA\Files_INotify\INotifyBackendProvider;
-use \OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
