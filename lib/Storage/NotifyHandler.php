@@ -53,7 +53,7 @@ class NotifyHandler implements INotifyHandler {
 		return new \RecursiveIteratorIterator(
 			new \RecursiveDirectoryIterator($path,
 				\FilesystemIterator::CURRENT_AS_PATHNAME + \FilesystemIterator::SKIP_DOTS),
-			\RecursiveIteratorIterator::SELF_FIRST);
+			\RecursiveIteratorIterator::SELF_FIRST, \RecursiveIteratorIterator::CATCH_GET_CHILD);
 	}
 
 	private function register(): void {
