@@ -29,10 +29,8 @@ use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 
 class LoadBackendListener implements IEventListener {
-	/** @var BackendService */
-	private $backendService;
-	/** @var INotifyBackendProvider */
-	private $backendProvider;
+	private BackendService $backendService;
+	private INotifyBackendProvider $backendProvider;
 
 	public function __construct(BackendService $backendService, INotifyBackendProvider $backendProvider) {
 		$this->backendService = $backendService;

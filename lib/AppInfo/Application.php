@@ -21,14 +21,14 @@
 
 namespace OCA\Files_INotify\AppInfo;
 
-use \OCP\AppFramework\App;
 use OCA\Files_External\Service\BackendService;
 use OCA\Files_INotify\INotifyBackendProvider;
+use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\AppFramework\IAppContainer;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use OCP\EventDispatcher\IEventDispatcher;
 
 class Application extends App implements IBootstrap {
 	public function __construct(array $urlParams = []) {
@@ -42,7 +42,7 @@ class Application extends App implements IBootstrap {
 		$context->injectFn([$this, 'registerBackendDependents']);
 	}
 
-	public function registerBackendDependents(IAppContainer $appContainer, EventDispatcherInterface $dispatcher) {
+	public function registerBackendDependents(IAppContainer $appContainer, IEventDispatcher $dispatcher) {
 		$dispatcher->addListener(
 			'OCA\\Files_External::loadAdditionalBackends',
 			function () use ($appContainer) {
