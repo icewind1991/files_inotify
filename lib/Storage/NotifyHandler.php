@@ -205,7 +205,7 @@ class NotifyHandler implements INotifyHandler {
 	 * @return string
 	 */
 	private function getRelativePath(string $path): string {
-		return substr($path, strlen($this->basePath) + 1);
+		return substr($path, strlen($this->basePath) + 1) ?: '';
 	}
 
 	public function listen(callable $callback): void {
