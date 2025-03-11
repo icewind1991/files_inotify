@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright Copyright (c) 2020 Robin Appelman <robin@icewind.nl>
  *
@@ -45,24 +46,24 @@ class NotifyHandlerTest extends TestCase {
 		usleep(100 * 1000);
 
 		$changes = $this->handler->getChanges();
-		$this->assertEquals([new Change(IChange::ADDED, "foo.txt")], $changes);
+		$this->assertEquals([new Change(IChange::ADDED, 'foo.txt')], $changes);
 
 		file_put_contents($this->basePath . 'foo.txt', 'bar');
 		usleep(100 * 1000);
 
 		$changes = $this->handler->getChanges();
-		$this->assertEquals([new Change(IChange::MODIFIED, "foo.txt")], $changes);
+		$this->assertEquals([new Change(IChange::MODIFIED, 'foo.txt')], $changes);
 
 		rename($this->basePath . 'foo.txt', $this->basePath . 'bar.txt');
 		usleep(100 * 1000);
 
 		$changes = $this->handler->getChanges();
-		$this->assertEquals([new RenameChange(IChange::RENAMED, "foo.txt", "bar.txt")], $changes);
+		$this->assertEquals([new RenameChange(IChange::RENAMED, 'foo.txt', 'bar.txt')], $changes);
 
 		unlink($this->basePath . 'bar.txt');
 		usleep(100 * 1000);
 
 		$changes = $this->handler->getChanges();
-		$this->assertEquals([new Change(IChange::REMOVED, "bar.txt")], $changes);
+		$this->assertEquals([new Change(IChange::REMOVED, 'bar.txt')], $changes);
 	}
 }
