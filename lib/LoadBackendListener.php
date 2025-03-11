@@ -28,6 +28,9 @@ use OCA\Files_INotify\INotifyBackendProvider;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 
+/**
+ * @template-implements IEventListener<Event>
+ */
 class LoadBackendListener implements IEventListener {
 	private BackendService $backendService;
 	private INotifyBackendProvider $backendProvider;
