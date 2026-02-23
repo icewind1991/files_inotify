@@ -27,14 +27,14 @@ use OCA\Files_External\Lib\Config\IBackendProvider;
 use OCA\Files_INotify\Storage\INotifyBackend;
 
 class INotifyBackendProvider implements IBackendProvider {
-	/** @var INotifyBackend */
-	private $notifyBackend;
+	private INotifyBackend $notifyBackend;
 
 	public function __construct(INotifyBackend $notifyBackend) {
 		$this->notifyBackend = $notifyBackend;
 	}
 
-	public function getBackends() {
+	#[\Override]
+	public function getBackends(): array {
 		return [
 			$this->notifyBackend
 		];

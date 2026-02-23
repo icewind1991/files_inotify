@@ -30,20 +30,18 @@ use OCP\Files\Notify\INotifyHandler;
 class NotifyHandler implements INotifyHandler {
 	/** @var resource|null */
 	private $fd;
-
-	/** @var string */
-	private $basePath;
+	private string $basePath;
 
 	/** @var string[] */
-	private $pathMap = [];
+	private array $pathMap = [];
 
 	/** @var string[][] */
-	private $moveMap = [];
+	private array $moveMap = [];
 
 	/**
 	 * @param string $basePath
 	 */
-	public function __construct($basePath) {
+	public function __construct(string $basePath) {
 		$this->fd = inotify_init();
 
 		$this->basePath = rtrim($basePath, '/');
@@ -80,6 +78,7 @@ class NotifyHandler implements INotifyHandler {
 	/**
 	 * @return IChange[]
 	 */
+	#[\Override]
 	public function getChanges(): array {
 		if ($this->fd === null) {
 			return [];
@@ -208,6 +207,7 @@ class NotifyHandler implements INotifyHandler {
 		return substr($path, strlen($this->basePath) + 1) ?: '';
 	}
 
+	#[\Override]
 	public function listen(callable $callback): void {
 		if ($this->fd === null) {
 			return;
@@ -244,6 +244,7 @@ class NotifyHandler implements INotifyHandler {
 		}
 	}
 
+	#[\Override]
 	public function stop(): void {
 		if ($this->fd === null) {
 			return;

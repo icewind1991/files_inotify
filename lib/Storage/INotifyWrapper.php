@@ -24,11 +24,12 @@ namespace OCA\Files_INotify\Storage;
 
 use OC\Files\Storage\Local;
 use OCP\Files\Notify\IChange;
+use OCP\Files\Notify\INotifyHandler;
 use OCP\Files\Notify\IRenameChange;
 use OCP\Files\Storage\INotifyStorage;
 
 class INotifyWrapper extends Local implements INotifyStorage {
-	public function listen($path, callable $callback) {
+	public function listen($path, callable $callback): void {
 		$this->notify($path)->listen(function (IChange $change) use ($callback) {
 			if ($change instanceof IRenameChange) {
 				return $callback($change->getType(), $change->getPath(), $change->getTargetPath());
@@ -38,7 +39,8 @@ class INotifyWrapper extends Local implements INotifyStorage {
 		});
 	}
 
-	public function notify($path) {
+	#[\Override]
+	public function notify($path): INotifyHandler {
 		return new NotifyHandler($this->datadir);
 	}
 }
