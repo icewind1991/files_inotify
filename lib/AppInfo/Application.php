@@ -22,40 +22,23 @@
 
 namespace OCA\Files_INotify\AppInfo;
 
-use OCA\Files_External\Service\BackendService;
-use OCA\Files_INotify\INotifyBackendProvider;
+use OCA\Files_INotify\Listener\RegisterBackendListener;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
-use OCP\AppFramework\IAppContainer;
-use OCP\EventDispatcher\IEventDispatcher;
 
 class Application extends App implements IBootstrap {
 	public function __construct(array $urlParams = []) {
 		parent::__construct('files_inotify', $urlParams);
 	}
 
+	#[\Override]
 	public function register(IRegistrationContext $context): void {
+		$context->registerEventListener('OCA\\Files_External::loadAdditionalBackends', RegisterBackendListener::class);
 	}
 
+	#[\Override]
 	public function boot(IBootContext $context): void {
-		$context->injectFn([$this, 'registerBackendDependents']);
-	}
-
-	public function registerBackendDependents(IAppContainer $appContainer, IEventDispatcher $dispatcher) {
-		$dispatcher->addListener(
-			'OCA\\Files_External::loadAdditionalBackends',
-			function () use ($appContainer) {
-				if (\OC::$CLI && class_exists(BackendService::class)) {
-					// we can't inject these 2, since they would cause hard errors if files_external is not enabled
-					/** @var BackendService $backendService */
-					$backendService = $appContainer->get(BackendService::class);
-					/** @var INotifyBackendProvider $backendProvider */
-					$backendProvider = $appContainer->get(INotifyBackendProvider::class);
-					$backendService->registerBackendProvider($backendProvider);
-				}
-			}
-		);
 	}
 }
