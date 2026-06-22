@@ -26,18 +26,18 @@ use OC\Files\Notify\Change;
 use OC\Files\Notify\RenameChange;
 use OCA\Files_INotify\Storage\NotifyHandler;
 use OCP\Files\Notify\IChange;
+use OCP\ITempManager;
+use OCP\Server;
 use Test\TestCase;
 
 class NotifyHandlerTest extends TestCase {
-	/** @var NotifyHandler */
-	private $handler;
-	/** @var string */
-	private $basePath;
+	private NotifyHandler $handler;
+	private string $basePath;
 
 	protected function setUp(): void {
 		parent::setUp();
 
-		$this->basePath = \OC::$server->getTempManager()->getTemporaryFolder();
+		$this->basePath = Server::get(ITempManager::class)->getTemporaryFolder();
 		$this->handler = new NotifyHandler($this->basePath);
 	}
 
