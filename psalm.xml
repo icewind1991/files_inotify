@@ -14,7 +14,26 @@
 		<directory name="vendor/nextcloud/ocp"/>
 	</extraFiles>
 	<stubs>
-		<file name="tests/stub.phpstub" preloadClasses="true"/>
+		<file name="tests/stubs/oca_files_external_lib_auth_authmechanism.php" preloadClasses="true"/>
+		<file name="tests/stubs/oca_files_external_lib_auth_nullmechanism.php" preloadClasses="true"/>
+		<file name="tests/stubs/oca_files_external_lib_backend_backend.php" preloadClasses="true"/>
+		<file name="tests/stubs/oca_files_external_lib_backend_local.php" preloadClasses="true"/>
+		<file name="tests/stubs/oca_files_external_lib_config_ibackendprovider.php" preloadClasses="true"/>
+		<file name="tests/stubs/oca_files_external_lib_iidentifier.php" preloadClasses="true"/>
+		<file name="tests/stubs/oca_files_external_lib_ifrontenddefinition.php" preloadClasses="true"/>
+		<file name="tests/stubs/oca_files_external_lib_identifiertrait.php" preloadClasses="true"/>
+		<file name="tests/stubs/oca_files_external_lib_visibilitytrait.php" preloadClasses="true"/>
+		<file name="tests/stubs/oca_files_external_lib_frontenddefinitiontrait.php" preloadClasses="true"/>
+		<file name="tests/stubs/oca_files_external_lib_prioritytrait.php" preloadClasses="true"/>
+		<file name="tests/stubs/oca_files_external_lib_storagemodifiertrait.php" preloadClasses="true"/>
+		<file name="tests/stubs/oca_files_external_lib_dependencytrait.php" preloadClasses="true"/>
+		<file name="tests/stubs/oca_files_external_service_backendservice.php" preloadClasses="true"/>
+		<file name="tests/stubs/oc_cli.php" preloadClasses="true"/>
+		<file name="tests/stubs/oc_files_storage_storage.php" preloadClasses="true"/>
+		<file name="tests/stubs/oc_files_storage_common.php" preloadClasses="true"/>
+		<file name="tests/stubs/oc_files_storage_local.php" preloadClasses="true"/>
+		<file name="tests/stubs/oc_files_notify_change.php" preloadClasses="true"/>
+		<file name="tests/stubs/oc_files_notify_renamechange.php" preloadClasses="true"/>
 	</stubs>
 	<issueHandlers>
 	</issueHandlers>
